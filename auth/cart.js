@@ -172,7 +172,7 @@ async function deleteCart(req,res){
         jwt.verify(token, SECRET_KEY);
     }
     catch(err){
-        return res.status(400).send("Invalid token"); 
+        return res.status(400).send("Invalid User"); 
     }   
     }
     const decode=jwt.decode(token);
@@ -189,7 +189,7 @@ async function deleteCart(req,res){
     })
 
     if (index == null) {
-        throw error
+        return res.status(400).send("Invalid Request"); 
     } else {
         Cart.splice(index, 1);
     }
@@ -204,6 +204,50 @@ async function deleteCart(req,res){
         Cart,
     });
 }
+//for labtests
+async function deleteTests(req,res){
+    const token=req.headers.authtoken;
+    const {test_name, patient_name}=req.body;
+    if(token){
+    
+    try{
+        jwt.verify(token, SECRET_KEY);
+    }
+    catch(err){
+        return res.status(400).send("Invalid User"); 
+    }   
+    }
+    const decode=jwt.decode(token);
+    const user=await User.findOne({
+        email:decode.email
+    });
+    let Test=user.tests;
+
+    let index = null
+    Test.forEach((el, i) => {
+        if (el.patient_name == patient_name && el.test_name == test_name) {
+            index = i;
+        }
+    })
+
+    if (index == null) {
+        return res.status(400).send("Invalid Request"); 
+    } else {
+        Test.splice(index, 1);
+    }
+  
+    await User.findOneAndUpdate({
+        email:decode.email
+    },{
+       tests:Test
+    })
+
+    return res.status(200).send({
+        Test
+    });
+}
+
+
 async function updateCart(req,res){
     const token=req.headers.authtoken;
     const {product_name,quantity}=req.body;
@@ -253,6 +297,7 @@ module.exports={
     getCart,
     getTest,
     addCart,
+    deleteTests,
     deleteCart,
     updateCart,
     addTest
