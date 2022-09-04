@@ -118,7 +118,7 @@ async function addTest(req,res){
         jwt.verify(token, SECRET_KEY);
     }
     catch(err){
-        return res.status(400).send("Invalid User"); 
+        return res.status(400).send({message:"Please login first."}); 
     }   
     }
     const decode=jwt.decode(token);
