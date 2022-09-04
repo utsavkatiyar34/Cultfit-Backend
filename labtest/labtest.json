@@ -1,5 +1,4 @@
-{
-  "labTest": [
+[
     {
       "title": "Full Body Checkup",
       "image": "https://cdn-images.cure.fit/www-curefit-com/image/upload/w_232,ar_0.8,fl_progressive,f_auto,q_auto:eco/dpr_2/image/carefit/bundle/FitCheck_Magazine-02.png",
@@ -341,5 +340,5 @@
       "price": 2990,
       "offerPrice": 1190
     }
-  ]
-}
+]
+
