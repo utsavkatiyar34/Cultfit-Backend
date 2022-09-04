@@ -40,8 +40,46 @@ const cultuserSchema = new mongoose.Schema({
                 }
             }
         }
+    },
+    tests:{
+    type:Array,
+    childrenSchema:{
+        type:Object,
+        childrenSchemas:{
+            patient_name:{
+                type:String,
+                required:true
+            },
+            gender:{
+                type:String,
+                required:true
+            },
+            test_name:{
+                type:String,
+                required:true
+            },
+            test_image:{
+                type:String,
+                required:true
+            },
+            price:{
+                type:Number,
+                min:0,
+                required:true
+            },
+            date_of_birth:{
+                type:String,
+                required:true
+            },
+            schedule_date:{
+                type:String,
+                required:true
+            }
+        }
     }
-}, {
+}
+},
+{
     timestamps: true
 })
 

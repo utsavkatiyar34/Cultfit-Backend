@@ -32,12 +32,8 @@ async function register(req, res) {
     verifyMobilenumber:otp,
     password,
     cart:[
-        {
-            "product_name":"",
-            "product_image":"",
-            "price":0,
-            "quantity":0
-        }
+    ],
+    tests:[
     ]
   });
 //send a verification email

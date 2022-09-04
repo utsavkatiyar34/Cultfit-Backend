@@ -22,11 +22,42 @@ async function getCart(req,res){
     });
     let cart=user.cart;
     for(let i=0;i<cart.length;i++){
+        if((cart[i].price)>1){
         total=total+(cart[i].price*cart[i].quantity)
+        }
     }
     return res.status(200).send({
         cart,
         Grandtotal:total
+    });
+}
+//for tests
+async function getTest(req,res){
+    let testTotal=0;
+    const token=req.headers.authtoken;
+    if(token){
+    
+    try{
+        jwt.verify(token, SECRET_KEY);
+    }
+    catch(err){
+        return res.status(400).send("invalid token"); 
+    }   
+    }
+    const decode=jwt.decode(token);
+    const user=await User.findOne({
+        email:decode.email
+    });
+    let cart=user.tests;
+    for(let i=0;i<cart.length;i++){
+        if((cart[i].price)>1){
+            testTotal=testTotal+(cart[i].price);
+        }
+    }
+    console.log(testTotal);
+    return res.status(200).send({
+        cart,
+        Test_Grandtotal:testTotal
     });
 }
 async function addCart(req,res){
@@ -77,6 +108,61 @@ async function addCart(req,res){
         Cart,
     });
 }
+//for test
+async function addTest(req,res){
+    const token=req.headers.authtoken;
+    const {patient_name,date_of_birth,schedule_date,test_image,test_name,gender,price}=req.body;
+    if(token){
+    
+    try{
+        jwt.verify(token, SECRET_KEY);
+    }
+    catch(err){
+        return res.status(400).send("Invalid User"); 
+    }   
+    }
+    const decode=jwt.decode(token);
+    const user=await User.findOne({
+    email:decode.email
+    });
+    let Test=user.tests;
+   if(price<1){
+       return res.status(400).send("Invalid request"); 
+   }else{
+    let index = null
+    Test.forEach((el, i) => {
+        if (el.test_name == test_name && el.patient_name==patient_name) {
+            index = i;
+        }
+    })
+
+    if (index == null) {
+        Test.push({
+            patient_name,
+            price,
+            date_of_birth,
+            schedule_date,
+            test_image,
+            test_name,
+            gender
+        });
+    } else {
+        return res.status(400).send(`${test_name} is already scheduled for ${patient_name}`); 
+    }
+    }
+    await User.findOneAndUpdate({
+        email:decode.email
+    },{
+       tests:Test
+    })
+
+    return res.status(200).send({
+        message:`${test_name} test successfully scheduled for ${patient_name} at ${schedule_date}`,
+        Test,
+    });
+}
+
+
 async function deleteCart(req,res){
     const token=req.headers.authtoken;
     const {product_name}=req.body;
@@ -165,7 +251,9 @@ async function updateCart(req,res){
 
 module.exports={
     getCart,
+    getTest,
     addCart,
     deleteCart,
-    updateCart
+    updateCart,
+    addTest
 }
