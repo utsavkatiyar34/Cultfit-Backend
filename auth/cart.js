@@ -247,6 +247,34 @@ async function deleteTests(req,res){
     });
 }
 
+async function checkOut(req,res){
+    const token=req.headers.authtoken;
+    if(token){
+    
+    try{
+        jwt.verify(token, SECRET_KEY);
+    }
+    catch(err){
+        return res.status(400).send("Invalid User"); 
+    }   
+    }
+    const decode=jwt.decode(token);
+    const user=await User.findOne({
+        email:decode.email
+    });
+    let Test=user.tests;
+    let Cart=user.cart;
+    await User.findOneAndUpdate({
+        email:decode.email
+    },{
+       tests:[],
+       cart:[]
+    })
+
+    return res.status(200).send({
+    message:"Order placed successfully."
+    });
+}
 
 async function updateCart(req,res){
     const token=req.headers.authtoken;
@@ -300,5 +328,6 @@ module.exports={
     deleteTests,
     deleteCart,
     updateCart,
+    checkOut,
     addTest
 }

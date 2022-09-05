@@ -6,7 +6,7 @@ const port = 7000;
 const connectDb = require("./database/index");
 const { register, login, loggedinuser, veriFy } = require('./auth/auth');
 const { Verify } = require('crypto');
-const { getCart, addCart, deleteCart, updateCart, addTest, getTest, deleteTests } = require('./auth/cart');
+const { getCart, addCart, deleteCart, updateCart, addTest, getTest, deleteTests, checkOut } = require('./auth/cart');
 const labTestRoute=require('./labtest/labTest.route');
 const personalDetail=require('./labtest/personalDetails.route',)
 
@@ -31,6 +31,7 @@ app.post('/updatequantity', updateCart);
 app.post('/addtest', addTest);
 app.get('/gettest', getTest);
 app.delete('/removetest', deleteTests);
+app.post('/checkout', checkOut);
 
 app.use("/labTest",labTestRoute);
 app.use('/personalDetails',personalDetail)
